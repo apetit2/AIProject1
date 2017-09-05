@@ -60,12 +60,11 @@ public class SearchMethods {
             for(int i = tmp.size() - 1; i >= 0; i--){
                 toPrint.add(0, tmp.get(i));
             }
+            v[start.getIndex()] = true;
         } else {
             toPrint.remove(0);
         }
-        v[start.getIndex()] = true;
         for(Node node : nodes.get(start.getIndex()).getNeighbors()){
-            //System.out.println(node.getNodeName());
             if(at < limit){
                 if(!(v[node.getIndex()] == true)){
                 
@@ -81,12 +80,16 @@ public class SearchMethods {
         }
     }
     
+    public static void iterativeDeeping(Node start, ArrayList<Node> nodes, boolean[] v, ArrayList<ArrayList<Node>> toPrint){
+        
+    }
+    
     public static void bfs(Node start, ArrayList<Node> nodes, boolean[] v, ArrayList<ArrayList<Node>> toPrint){
         Queue<Node> queue = new LinkedList<>();
-        v[start.getIndex()] = true;
         queue.add(start);
         while(!queue.isEmpty()){
             Node node = queue.remove();
+            //v[node.getIndex()] = true;
             System.out.println(node);
             
             for(Node n : node.getNeighbors()){
@@ -98,4 +101,5 @@ public class SearchMethods {
         }
        
     }
+    
 }
