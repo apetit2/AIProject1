@@ -10,9 +10,9 @@ package main;
  * @author apand
  */
 public class Link {
-        private double distance;
-        private Node start;
-        private Node end;
+        private double distance; //distance between two nodes
+        private Node start; //start node 
+        private Node end; //end node
         
         public Link(double distance, Node start, Node end){
             this.distance = distance;

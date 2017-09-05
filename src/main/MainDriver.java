@@ -21,12 +21,16 @@ public class MainDriver {
         
         ArrayList<Node> nodes = new ArrayList<>();
         ArrayList<String> strings = new ArrayList<>();
+        
+        //for reading in the file
         BufferedReader br = null;
         FileReader fr = null;
         if (args.length == 0){
             System.out.println("Need to enter a file name");
             return;
         }
+        
+        //assuming this is a filename
         String FILENAME = args[0];
         
         try {
@@ -35,6 +39,7 @@ public class MainDriver {
             
             String sCurrentLine;
             
+            //go through the buffer and make an array of nodes and their neighbors + distances
             while((sCurrentLine= br.readLine()) != null){
                 char[] array = sCurrentLine.toCharArray();
                 if(array[0] == '#'){
@@ -42,6 +47,11 @@ public class MainDriver {
                 }
                 strings.add(sCurrentLine);
             }
+            
+            //need a new while loop to finish reading in the heuristics
+            /**TODO 
+             * Modify Node and create a while loop to go through the rest of the buffer to support heuristics for astar and so forth
+             */
             
             //set up the graph
             int index = 0;
@@ -218,7 +228,8 @@ public class MainDriver {
             SearchMethods.beamSearch(start, nodes, array, toPrint);
             System.out.println("\n\n");
             
-        } catch (IOException e){
+        } catch (Exception e){
+            System.out.println("Invalid filename entered, please try to run the program again with a valid txt file");
             System.out.println(e.getMessage());
         }
     }

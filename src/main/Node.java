@@ -12,10 +12,10 @@ import java.util.ArrayList;
  * @author apand
  */
 public class Node {
-        private ArrayList<Node> neighbors;
-        private ArrayList<Link> links;
-        private String nodeName;
-        private int index;
+        private ArrayList<Node> neighbors; //a list of the neighbors of a node
+        private ArrayList<Link> links; //consists of two nodes and the distance between the two nodes =
+        private String nodeName; //the name of the node
+        private int index; //the place in the node exists in the original list of nodes
         
         public Node(String name) {
             this.neighbors = new ArrayList<>();
@@ -60,6 +60,7 @@ public class Node {
             this.index = index;
         }
         
+        @Override
         public String toString(){
             return this.getNodeName();
         }
