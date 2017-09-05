@@ -157,12 +157,18 @@ public class MainDriver {
             array = new boolean[nodes.size()];
             toPrint = new ArrayList<>();
             toPrint.add(tmp);
-            SearchMethods.dfsLimit(start, nodes, array, toPrint, 2, 0);
+            Node end = SearchMethods.dfsLimit(start, nodes, array, toPrint, 2);
+            if (end != null){
+                System.out.println("Goal Reached!");
+            }
             System.out.println("\n\n");
             
             //Iterative Deepening Search
             System.out.println("Iterative Deepening Search");
-            System.out.println("Expanded \tQueue");
+            toPrint = new ArrayList<>();
+            toPrint.add(tmp);
+            SearchMethods.iterativeDeeping(start, nodes, toPrint);
+            System.out.println("Goal Reached!");
             System.out.println("\n\n");
             
             //Uniform Search
