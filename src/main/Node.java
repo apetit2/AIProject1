@@ -15,6 +15,7 @@ public class Node {
         private ArrayList<Node> neighbors; //a list of the neighbors of a node
         private ArrayList<Link> links; //consists of two nodes and the distance between the two nodes =
         private String nodeName; //the name of the node
+        private double heuristic;
         private int index; //the place in the node exists in the original list of nodes
         
         public Node(String name) {
@@ -58,6 +59,14 @@ public class Node {
         
         public void setIndex(int index){
             this.index = index;
+        }
+        
+        public void setHeuristic(double heuristic){
+            this.heuristic = heuristic;
+        }
+        
+        public double getHeuristic(){
+            return this.heuristic;
         }
         
         @Override

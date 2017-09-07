@@ -7,7 +7,6 @@ package main;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -21,6 +20,8 @@ public class MainDriver {
         
         ArrayList<Node> nodes = new ArrayList<>();
         ArrayList<String> strings = new ArrayList<>();
+        ArrayList<String> heuristics = new ArrayList<>();
+        ArrayList<String[]> processedHeuristics = new ArrayList<>();
         
         //for reading in the file
         BufferedReader br = null;
@@ -42,7 +43,7 @@ public class MainDriver {
             //go through the buffer and make an array of nodes and their neighbors + distances
             while((sCurrentLine= br.readLine()) != null){
                 char[] array = sCurrentLine.toCharArray();
-                if(array[0] == '#'){
+                if(array[0] == '#'){ //do not any more strings, next part is heuristics
                     break;
                 }
                 strings.add(sCurrentLine);
@@ -52,6 +53,15 @@ public class MainDriver {
             /**TODO 
              * Modify Node and create a while loop to go through the rest of the buffer to support heuristics for astar and so forth
              */
+            while((sCurrentLine = br.readLine()) != null){
+                heuristics.add(sCurrentLine);
+            }
+            
+            
+            for(String heuristic : heuristics){
+                String[] str = heuristic.split("\\s+");
+                processedHeuristics.add(str);
+            }
             
             //set up the graph
             int index = 0;
@@ -62,9 +72,21 @@ public class MainDriver {
                 Node end = new Node(str[1]);
                 double distance = Double.parseDouble(str[2]);
                 
+                
+                
                 //these are used to mark the index that node shows up in the initial array
                 //we will use this later for a visited array
                 int startExists = -1, endExists = -1;
+                
+                for(int i = 0; i < processedHeuristics.size(); i++){
+                    if(start.getNodeName().equals(processedHeuristics.get(i)[0])){
+                        start.setHeuristic(Double.parseDouble(processedHeuristics.get(i)[1]));
+                    }
+                        
+                    if(end.getNodeName().equals(processedHeuristics.get(i)[0])){
+                        end.setHeuristic(Double.parseDouble(processedHeuristics.get(i)[1]));
+                    }
+                }
                 
                 //if nodes is not empty we should update the existing nodes if the start or end exist
                 if(!nodes.isEmpty()){
@@ -110,17 +132,17 @@ public class MainDriver {
                         nodes.get(startExists).setLinks(start.getLinks());
                         //sort the neighbor nodes so that the first one is the first to appear in the alphabet and so forth
                         Collections.sort(start.getNeighbors(), new NameComparator()); 
+                        Collections.sort(start.getLinks(), new DistanceComparator());
                         nodes.get(startExists).setNeighbors(start.getNeighbors());
                         
                     }
                     if(endExists == -1){ //same thing just for end node
-                        end.setIndex(index);
                         nodes.add(end);
-                        index++;
                     } else if (endExists >= 0){ //...
                         nodes.get(endExists).setLinks(end.getLinks());
                         //sort the neighbor nodes so that the first one is the first to appear in the alphabet and so forth
                         Collections.sort(end.getNeighbors(), new NameComparator());
+                        Collections.sort(start.getLinks(), new DistanceComparator());
                         nodes.get(endExists).setNeighbors(end.getNeighbors());
                     }
                 } else { //nodes array has nothing in it so add the nodes to it
@@ -151,7 +173,7 @@ public class MainDriver {
                     break;
                 }
             }
-
+         
             //Depth First Search
             System.out.println("Depth First");
             System.out.println("Expanded \tQueue");
@@ -159,8 +181,8 @@ public class MainDriver {
             ArrayList<ArrayList<Node>> toPrint = new ArrayList<>();
             ArrayList<Node> tmp = new ArrayList<>();
             tmp.add(start);
-            toPrint.add(tmp);
-            SearchMethods.dfs(start, nodes, array, toPrint);
+            //toPrint.add(tmp);
+            SearchMethods.General_Search(nodes, "DFS");
             System.out.println("\n\n");
             
             //Breadth First Search -- needs work, kind of right, printing out is wrong because of visited
@@ -175,21 +197,12 @@ public class MainDriver {
             //Depth-limited Search
             System.out.println("Depth-limited Search (Limit = 2)");
             System.out.println("Expanded \tQueue");
-            array = new boolean[nodes.size()];
-            toPrint = new ArrayList<>();
-            toPrint.add(tmp);
-            Node end = SearchMethods.dfsLimit(start, nodes, array, toPrint, 2);
-            if (end != null){
-                System.out.println("Goal Reached!");
-            }
+            SearchMethods.General_Search(nodes, "DFS-L");
             System.out.println("\n\n");
             
             //Iterative Deepening Search
             System.out.println("Iterative Deepening Search");
-            toPrint = new ArrayList<>();
-            toPrint.add(tmp);
-            SearchMethods.iterativeDeeping(start, nodes, toPrint);
-            System.out.println("Goal Reached!");
+            SearchMethods.General_Search(nodes, "IDS");
             System.out.println("\n\n");
             
             //Uniform Search
@@ -198,7 +211,7 @@ public class MainDriver {
             array = new boolean[nodes.size()];
             toPrint = new ArrayList<>();
             toPrint.add(tmp);
-            SearchMethods.uniformSearch(start, nodes, array, toPrint);
+            SearchMethods.uniformSearch();
             System.out.println("\n\n");
             
             //Greedy Search
@@ -207,7 +220,7 @@ public class MainDriver {
             array = new boolean[nodes.size()];
             toPrint = new ArrayList<>();
             toPrint.add(tmp);
-            SearchMethods.greedySearch(start, nodes, array, toPrint);
+            SearchMethods.greedySearch();
             System.out.println("\n\n");
             
             //A*
@@ -216,7 +229,7 @@ public class MainDriver {
             array = new boolean[nodes.size()];
             toPrint = new ArrayList<>();
             toPrint.add(tmp);
-            SearchMethods.aStar(start, nodes, array, toPrint);
+            SearchMethods.aStar();
             System.out.println("\n\n");
             
             //Beam Search
@@ -225,7 +238,7 @@ public class MainDriver {
             array = new boolean[nodes.size()];
             toPrint = new ArrayList<>();
             toPrint.add(tmp);
-            SearchMethods.beamSearch(start, nodes, array, toPrint);
+            SearchMethods.beamSearch();
             System.out.println("\n\n");
             
         } catch (Exception e){
