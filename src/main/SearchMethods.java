@@ -26,15 +26,41 @@ public class SearchMethods {
     
     public static void dfsLimit(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue, boolean[] v, int limit){
         //if limit was ever below 0 we have severe problem
+        
         if(limit < 0){
             System.out.println("Limit was below 0");
             queue = new ArrayList<>();
             return;
         }
         
+        if(limit == 0){
+            Node start = new Node("S");
+            ArrayList<Node> nodes = new ArrayList<>();
+            nodes.add(start);
+            queue.add(nodes);
+            return;
+        }
+        
+        if((v[expanded.get(0).get(0).getIndex()] == true) && (expanded.size() == 1)){
+            v[expanded.get(0).get(1).getIndex()] = false;
+            return;
+        }
+        
         //we have exceeded the limit
-        if(expanded.get(0).size() > limit + 1){
-            v[expanded.get(0).get(1).getIndex() - 1] = false; //we falsely marked as visited, should remove that now
+        if(expanded.get(0).size() == limit + 1){
+            
+            if(queue.isEmpty()){
+                return;
+            }
+            
+            if(expanded.get(0).size() > queue.get(0).size()){
+                int diff = expanded.get(0).size() - queue.get(0).size();
+                int count = 1;
+                while(count <= diff){
+                    v[expanded.get(0).get(count).getIndex()] = false;
+                    count++;
+                }
+            } 
             return;
         }
         
@@ -47,40 +73,42 @@ public class SearchMethods {
     }
     
     public static ArrayList<ArrayList<Node>> iterativeDeepening(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue, boolean[] v, int index, Node start){
-        int limit = index;
-        while(limit != 0){
-            dfsLimit(expanded, queue, v, index);
-            ArrayList<Node> currentList = queue.get(0);
-            queue.remove(0);
-            if(queue.get(0).get(0).getNodeName().equals("G")){
-                    break;
+        dfsLimit(expanded, queue, v, index + 1);
+        if((index + 1) == 0){
+            return new ArrayList<>();
+        }
+        while(!queue.isEmpty()){
+            if (queue.isEmpty()){
+                break;
             }
-            if(currentList.size() > limit){
-                queue.remove(0);
-                System.out.println(queue);
+            ArrayList<Node> currentList = queue.get(0);
+            System.out.println(currentList.get(0).getNodeName() + "\t\t" + queue);
+            Node current = currentList.get(0);
+            if(current.getNodeName().equals("G")){
+                break;
+            }
+            queue.remove(0);
+            v[current.getIndex()] = true;
+            if(currentList.size() > (index + 1)){
                 if(queue.isEmpty()){
                     break;
                 }
+            } else {
+                if(!currentList.isEmpty()){
+                    expanded = expand(currentList);
+                    
+                    dfsLimit(expanded, queue, v, index + 1);
+                }
             }
-            System.out.println(currentList.get(0).getNodeName() + "\t\t" + queue);
-          
-            //System.out.println(queue.get(0).get(0).getNodeName() + "\t\t" + queue);
-            
-            expanded = expand(currentList);
-            
-            limit--;
         }
         if(!queue.isEmpty()){
-            if(queue.get(0).get(0).getNodeName().equals("G")){
-                return queue;
-            } 
-        } 
-        System.out.println("\n");
+            return queue;
+        }
         return new ArrayList<>();
     }
     
-    public static void bfs(Node start, ArrayList<Node> nodes, boolean[] v, ArrayList<ArrayList<Node>> toPrint){
-        Queue<Node> queue = new LinkedList<>();
+    public static void bfs(){
+        /*Queue<Node> queue = new LinkedList<>();
         queue.add(start);
         while(!queue.isEmpty()){
             Node node = queue.remove();
@@ -93,7 +121,7 @@ public class SearchMethods {
                     queue.add(n);
                 }
             }
-        }
+        }*/
        
     }
     
@@ -128,7 +156,7 @@ public class SearchMethods {
 
         //initialize stuff
         boolean[] v = new boolean[problem.size()];//to check if visited or not
-        int index = 1; //for iterative deepening
+        int index = 0; //for iterative deepening
         
 
         //make the queue and the start node to it
@@ -161,21 +189,31 @@ public class SearchMethods {
             switch(searchMethod){
                 case "DFS" : dfs(expanded, queue, v);
                     break;
-                case "DFS-L" : dfsLimit(expanded, queue, v, 2);
+                case "DFS-L" : dfsLimit(expanded, queue, v, 3);
                     break;
                 case "IDS" : 
                     queue = iterativeDeepening(expanded, queue, v, index, start);
                     index++;                
                     Arrays.fill(v, false);
-                    if(!queue.get(0).get(0).getNodeName().equals("G")){
-                        System.out.println("got here");
-                        queue = new ArrayList<>();
-                        //ArrayList<Node> tmp = new ArrayList<>();
-                        //tmp.add(start);
+                    if(queue.isEmpty()){
+                        System.out.println("\n");
                         queue.add(tmp);
+                    } else {
+                        System.out.println("Goal Reached!");
+                        return "Goal Reached!";
                     }
-                    
-                    System.out.println(queue);
+                    break;
+                case "BFS" : 
+                    break;
+                case "Uniform" :
+                    break;
+                case "Greedy":
+                    break;
+                case "AStar":
+                    break;
+                case "Beam":
+                    break;
+                case "Hill":
                     break;
                 default: return "Failed - invalid method entry";
             }

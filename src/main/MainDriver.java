@@ -177,21 +177,13 @@ public class MainDriver {
             //Depth First Search
             System.out.println("Depth First");
             System.out.println("Expanded \tQueue");
-            boolean[] array = new boolean[nodes.size()];
-            ArrayList<ArrayList<Node>> toPrint = new ArrayList<>();
-            ArrayList<Node> tmp = new ArrayList<>();
-            tmp.add(start);
-            //toPrint.add(tmp);
             SearchMethods.General_Search(nodes, "DFS");
             System.out.println("\n\n");
             
             //Breadth First Search -- needs work, kind of right, printing out is wrong because of visited
             System.out.println("Breadth First Search");
             System.out.println("Expanded \tQueue");
-            array = new boolean[nodes.size()];
-            toPrint = new ArrayList<>();
-            toPrint.add(tmp);
-            SearchMethods.bfs(start, nodes, array, toPrint);
+            SearchMethods.General_Search(nodes, "BFS");
             System.out.println("\n\n");
             
             //Depth-limited Search
@@ -207,38 +199,27 @@ public class MainDriver {
             
             //Uniform Search
             System.out.println("Uniform Search");
-            System.out.println("Expanded \tQueue");
-            array = new boolean[nodes.size()];
-            toPrint = new ArrayList<>();
-            toPrint.add(tmp);
-            SearchMethods.uniformSearch();
+            SearchMethods.General_Search(nodes, "Uniform");
             System.out.println("\n\n");
             
             //Greedy Search
             System.out.println("Greedy Search");
-            System.out.println("Expanded \tQueue");
-            array = new boolean[nodes.size()];
-            toPrint = new ArrayList<>();
-            toPrint.add(tmp);
-            SearchMethods.greedySearch();
+            SearchMethods.General_Search(nodes, "Greedy");
             System.out.println("\n\n");
             
             //A*
             System.out.println("A* Search");
-            System.out.println("Expanded \tQueue");
-            array = new boolean[nodes.size()];
-            toPrint = new ArrayList<>();
-            toPrint.add(tmp);
-            SearchMethods.aStar();
+            SearchMethods.General_Search(nodes, "AStar");
+            System.out.println("\n\n");
+            
+            //hill climb
+            System.out.println("Hill Climb");
+            SearchMethods.General_Search(nodes, "Hill");
             System.out.println("\n\n");
             
             //Beam Search
             System.out.println("Beam Search");
-            System.out.println("Expanded \tQueue");
-            array = new boolean[nodes.size()];
-            toPrint = new ArrayList<>();
-            toPrint.add(tmp);
-            SearchMethods.beamSearch();
+            SearchMethods.General_Search(nodes, "Beam");
             System.out.println("\n\n");
             
         } catch (Exception e){
