@@ -107,22 +107,26 @@ public class SearchMethods {
         return new ArrayList<>();
     }
     
-    public static void bfs(){
-        /*Queue<Node> queue = new LinkedList<>();
-        queue.add(start);
-        while(!queue.isEmpty()){
-            Node node = queue.remove();
-            //v[node.getIndex()] = true;
-            System.out.println(node);
-            
-            for(Node n : node.getNeighbors()){
-                if(v[n.getIndex()] == false){
-                    v[n.getIndex()] = true;
-                    queue.add(n);
+    public static void bfs(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue, boolean[] v){
+        ArrayList<ArrayList<Node>> initial = new ArrayList(queue);
+        ArrayList<ArrayList<Node>> tmp = new ArrayList<>();
+        System.out.println(initial);
+        for(int i = 0; i < expanded.size(); i++){
+            if(v[expanded.get(i).get(0).getIndex()] == false){
+                if(initial.isEmpty()){
+                    queue.add(0, expanded.get(i));
+                } else {
+                    System.out.println(queue);
+                    tmp.add(expanded.get(i));
                 }
             }
-        }*/
-       
+        }
+        
+        if(!tmp.isEmpty()){
+            for(int i = tmp.size() - 1; i >= 0; i--){
+                queue.add(tmp.get(i));
+            }
+        }
     }
     
     public static void uniformSearch(){
@@ -141,7 +145,9 @@ public class SearchMethods {
         
     }
     
-    public static void hillClimb(){}
+    public static void hillClimb(){
+    
+    }
     
     public static String General_Search(ArrayList<Node> problem, String searchMethod){
         
@@ -203,7 +209,7 @@ public class SearchMethods {
                         return "Goal Reached!";
                     }
                     break;
-                case "BFS" : 
+                case "BFS" : bfs(expanded, queue, v);
                     break;
                 case "Uniform" :
                     break;
