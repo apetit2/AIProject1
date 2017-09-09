@@ -32,6 +32,7 @@ public class SearchMethods {
             return;
         }
         
+        //we know that we don't need to run the whole thing because we only look at S
         if(limit == 0){
             Node start = new Node("S");
             ArrayList<Node> nodes = new ArrayList<>();
@@ -40,6 +41,7 @@ public class SearchMethods {
             return;
         }
         
+        //if we look at the child nodes and the child is visited and is the only child we don't need to worry about it
         if((v[expanded.get(0).get(0).getIndex()] == true) && (expanded.size() == 1)){
             v[expanded.get(0).get(1).getIndex()] = false;
             return;
@@ -52,6 +54,7 @@ public class SearchMethods {
                 return;
             }
             
+            //don't add to list and remove visited from the list
             if(expanded.get(0).size() > queue.get(0).size()){
                 int diff = expanded.get(0).size() - queue.get(0).size();
                 int count = 1;
@@ -72,14 +75,17 @@ public class SearchMethods {
     }
     
     public static ArrayList<ArrayList<Node>> iterativeDeepening(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue, boolean[] v, int index, Node start){
+        //run dfs limit to start
         dfsLimit(expanded, queue, v, index + 1);
         if((index + 1) == 0){
             return new ArrayList<>();
         }
+        
+        //keep going until we have emptied the entire queue
         while(!queue.isEmpty()){
-            if (queue.isEmpty()){
-                break;
-            }
+            
+            //basically rerun general search here with the current queue
+            //could honestly probably just used mutual recursion with general search here
             ArrayList<Node> currentList = queue.get(0);
             System.out.println(currentList.get(0).getNodeName() + "\t\t" + queue);
             Node current = currentList.get(0);
@@ -107,29 +113,39 @@ public class SearchMethods {
     }
     
     public static void bfs(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue, boolean[] v){
+        //tmp array to keep track of all visited nodes so far
         ArrayList<ArrayList<Node>> tmp = new ArrayList<>();
         for(int i = expanded.size() - 1; i >= 0; i--){
             
+            //get the first node in the list we are looking at
             Node t = expanded.get(i).get(0);
+            
+            //this is needed because it breaks sublist if we keep it going
             if(expanded.get(i).size() == 2){
                 tmp.add(0, expanded.get(i));
                 continue;
             }
             
+            //make a sublist of all the visited nodes
             List<Node> ts = expanded.get(i).subList(1, expanded.get(i).size());
+            //if there happens to be no visited nodes, well then we can add this to the queue
             if(ts.isEmpty()){
                 tmp.add(0, expanded.get(i));
                 continue;
             }
 
+            //temporarily add the child to the queue
             tmp.add(expanded.get(i));
             for(int j = 0; j < ts.size(); j++){
+                //if the child is not the same as another child in the expanded list, then we don't remove
+                //if it is, we remove from the temporary array
                 if (t.getNodeName().equals(ts.get(j).getNodeName())){
                     tmp.remove(tmp.size() - 1);
                     break;
                 }
             }
-
+            
+            //sort the array 
             if(tmp.size() > 1){
                 Collections.sort(tmp, new ArrayListComparator());
             }
