@@ -163,7 +163,44 @@ public class SearchMethods {
         
     }
     
-    public static void greedySearch(){
+    public static void greedySearch(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue){
+        ArrayList<ArrayList<Node>> tmp = new ArrayList<>();
+        for(int i = 0; i <= expanded.size() - 1; i++){
+            //get the first node in the list we are looking at
+            Node t = expanded.get(i).get(0);
+
+            //this is needed because it breaks sublist if we keep it going
+            if(expanded.get(i).size() == 2){
+                tmp.add(0, expanded.get(i));
+                continue;
+            }
+            
+            //make a sublist of all the visited nodes
+            List<Node> ts = expanded.get(i).subList(1, expanded.get(i).size());
+            //if there happens to be no visited nodes, well then we can add this to the queue
+            if(ts.isEmpty()){
+                tmp.add(0, expanded.get(i));
+                continue;
+            }
+
+            //temporarily add the child to the queue
+            tmp.add(expanded.get(i));
+            for(int j = 0; j < ts.size(); j++){
+                //if the child is not the same as another child in the expanded list, then we don't remove
+                //if it is, we remove from the temporary array
+                if (t.getNodeName().equals(ts.get(j).getNodeName())){
+                    tmp.remove(tmp.size() - 1);
+                    break;
+                }
+            }
+        }
+        //System.out.println(queue);
+        if(!tmp.isEmpty()){
+            for(int i = 0; i < tmp.size(); i++){
+                queue.add(tmp.get(i));
+            }
+        }
+        Collections.sort(queue, new HeuristicComparator());
         
     }
     
@@ -243,7 +280,7 @@ public class SearchMethods {
                     break;
                 case "Uniform" :
                     break;
-                case "Greedy":
+                case "Greedy": greedySearch(expanded, queue);
                     break;
                 case "AStar":
                     break;
