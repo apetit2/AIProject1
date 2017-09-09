@@ -7,6 +7,7 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -28,7 +29,6 @@ public class SearchMethods {
         
         if(limit < 0){
             System.out.println("Limit was below 0");
-            queue = new ArrayList<>();
             return;
         }
         
@@ -107,24 +107,33 @@ public class SearchMethods {
     }
     
     public static void bfs(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue, boolean[] v){
-        ArrayList<ArrayList<Node>> initial = new ArrayList(queue);
         ArrayList<ArrayList<Node>> tmp = new ArrayList<>();
-        for(int i = 0; i < expanded.size(); i++){
-            //System.out.println(expanded);
-            List<Node> t = expanded.get(i).subList(1, expanded.get(0).size() - 1);
-            if(initial.isEmpty()){
-                queue.add(0, expanded.get(i));
+        for(int i = expanded.size() - 1; i >= 0; i--){
+            
+            Node t = expanded.get(i).get(0);
+            if(expanded.get(i).size() == 2){
+                tmp.add(0, expanded.get(i));
+                continue;
             }
             
-            System.out.println(t);
-            for(int j = 0; j < t.size(); j++){
-                System.out.println(t.get(j));
-                System.out.println("here");
-                System.out.println(expanded.get(0).get(i));
-                if (!t.get(j).getNodeName().equals(expanded.get(i).get(0).getNodeName())){
-                    tmp.add(expanded.get(i));
+            List<Node> ts = expanded.get(i).subList(1, expanded.get(i).size());
+            if(ts.isEmpty()){
+                tmp.add(0, expanded.get(i));
+                continue;
+            }
+
+            tmp.add(expanded.get(i));
+            for(int j = 0; j < ts.size(); j++){
+                if (t.getNodeName().equals(ts.get(j).getNodeName())){
+                    tmp.remove(tmp.size() - 1);
+                    break;
                 }
             }
+
+            if(tmp.size() > 1){
+                Collections.sort(tmp, new ArrayListComparator());
+            }
+
         }
         
         if(!tmp.isEmpty()){
