@@ -7,8 +7,7 @@ package main;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.Queue;
+import java.util.List;
 
 /**
  *
@@ -110,13 +109,19 @@ public class SearchMethods {
     public static void bfs(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue, boolean[] v){
         ArrayList<ArrayList<Node>> initial = new ArrayList(queue);
         ArrayList<ArrayList<Node>> tmp = new ArrayList<>();
-        System.out.println(initial);
         for(int i = 0; i < expanded.size(); i++){
-            if(v[expanded.get(i).get(0).getIndex()] == false){
-                if(initial.isEmpty()){
-                    queue.add(0, expanded.get(i));
-                } else {
-                    System.out.println(queue);
+            //System.out.println(expanded);
+            List<Node> t = expanded.get(i).subList(1, expanded.get(0).size() - 1);
+            if(initial.isEmpty()){
+                queue.add(0, expanded.get(i));
+            }
+            
+            System.out.println(t);
+            for(int j = 0; j < t.size(); j++){
+                System.out.println(t.get(j));
+                System.out.println("here");
+                System.out.println(expanded.get(0).get(i));
+                if (!t.get(j).getNodeName().equals(expanded.get(i).get(0).getNodeName())){
                     tmp.add(expanded.get(i));
                 }
             }
