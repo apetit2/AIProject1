@@ -212,8 +212,17 @@ public class SearchMethods {
         
     }
     
-    public static void hillClimb(){
-    
+    public static void hillClimb(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue, boolean[] v){
+        ArrayList<ArrayList<Node>> tmp = new ArrayList<>();
+        for(int i = 0; i < expanded.size(); i++){ 
+            if (v[expanded.get(i).get(0).getIndex()] == false){ //if we haven't already visited the node we add it to the queue
+                tmp.add(expanded.get(i));
+                Collections.sort(tmp, new HeuristicComparator());
+            }
+        }
+        for(int i = tmp.size() - 1; i >= 0; i--){
+            queue.add(0, tmp.get(i));
+        }
     }
     
     public static String General_Search(ArrayList<Node> problem, String searchMethod){
@@ -286,7 +295,7 @@ public class SearchMethods {
                     break;
                 case "Beam":
                     break;
-                case "Hill":
+                case "Hill": hillClimb(expanded, queue, v);
                     break;
                 default: return "Failed - invalid method entry";
             }
