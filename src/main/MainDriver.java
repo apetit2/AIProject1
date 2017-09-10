@@ -180,7 +180,7 @@ public class MainDriver {
             SearchMethods.General_Search(nodes, "DFS");
             System.out.println("\n\n");
             
-            //Breadth First Search -- needs work, kind of right, printing out is wrong because of visited
+            //Breadth First Search 
             System.out.println("Breadth First Search");
             System.out.println("Expanded \tQueue");
             SearchMethods.General_Search(nodes, "BFS");
