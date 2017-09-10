@@ -17,7 +17,6 @@ public class Node {
         private String nodeName; //the name of the node
         private double heuristic;
         private int index; //the place in the node exists in the original list of nodes
-        private double distance = 0;
         
         public Node(String name) {
             this.neighbors = new ArrayList<>();
@@ -68,14 +67,6 @@ public class Node {
         
         public double getHeuristic(){
             return this.heuristic;
-        }
-        
-        public double getDistance() {
-            return this.distance;
-        }
-        
-        public void setDistance(double distance) {
-            this.distance = distance;
         }
         
         @Override
