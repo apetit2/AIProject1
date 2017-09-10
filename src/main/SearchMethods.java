@@ -288,18 +288,28 @@ public class SearchMethods {
     }
     
     public static void beamSearch(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue, int w, boolean[] v){
-        if(queue.size() > w){
+        //System.out.println(queue.size());
+        if(queue.size() + 1 > w){
             queue.remove(queue.size() - 1);
-        }
-        ArrayList<ArrayList<Node>> tmp = new ArrayList<>();
-        for(int i = 0; i < expanded.size(); i++){ 
-            if (v[expanded.get(i).get(0).getIndex()] == false){ //if we haven't already visited the node we add it to the queue
-                tmp.add(expanded.get(i));
-                Collections.sort(tmp, new HeuristicComparator());
+        } 
+        
+        if(queue.size() + 1 == 1){
+            for(int i = 0; i < expanded.size(); i++){ 
+                if (v[expanded.get(i).get(0).getIndex()] == false){ //if we haven't already visited the node we add it to the queue
+                    queue.add(0, expanded.get(i));
+                }
             }
-        }
-        for(int i = tmp.size() - 1; i >= 0; i--){
-            queue.add(0, tmp.get(i));
+        } else {
+            ArrayList<ArrayList<Node>> tmp = new ArrayList<>();
+            for(int i = 0; i < expanded.size(); i++){ 
+                if (v[expanded.get(i).get(0).getIndex()] == false){ //if we haven't already visited the node we add it to the queue
+                    tmp.add(expanded.get(i));
+                    Collections.sort(tmp, new HeuristicComparator());
+                }
+            }
+            for(int i = 0; i < tmp.size(); i++){
+                queue.add(tmp.get(i));
+            }
         }
         
     }
