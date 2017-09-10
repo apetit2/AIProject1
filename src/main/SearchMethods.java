@@ -378,6 +378,25 @@ public class SearchMethods {
                 }
                 sb.append("]");
                 System.out.println(sb.toString());
+            } else if (searchMethod.equals("Uniform")){
+                StringBuilder sb = new StringBuilder();
+                sb.append("[");
+                String s2 = map.get(Arrays.toString(currentList.toArray())) + Arrays.toString(currentList.toArray());
+                sb.append(s2);
+                if(!queue.isEmpty()){
+                    sb.append(" , ");
+                }
+                for(int i = 0; i < queue.size(); i++){
+                    String s = map.get(Arrays.toString(queue.get(i).toArray())) + Arrays.toString(queue.get(i).toArray());
+                    sb.append(s);
+                    if(i != queue.size() - 1){
+                        sb.append(" , ");
+                    }
+                }
+                sb.append("]");
+                System.out.println(sb.toString());
+            } else if (searchMethod.equals("AStar")){
+                
             } else {
                 System.out.println(current.getNodeName() + "\t\t" + tmpQueue);
             }
