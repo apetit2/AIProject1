@@ -257,63 +257,33 @@ public class SearchMethods {
         
     }
     
-    public static void aStar(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue, Map<String, Double> map){
-        //will need to use Collections.sort(queue, new DistanceComparator());
-        ArrayList<ArrayList<Node>> nodes = new ArrayList<>();
-        for(int i = 0; i < expanded.size(); i++){
-            //get the first node in the list we are looking at
-            Node t = expanded.get(i).get(0);
-            
-            //this is needed because it breaks sublist if we keep it going
-            if(expanded.get(i).size() == 2){
-                nodes.add(0, expanded.get(i));
-                continue;
-            }
-            
-            //make a sublist of all the visited nodes
-            List<Node> ts = expanded.get(i).subList(1, expanded.get(i).size());
-            //if there happens to be no visited nodes, well then we can add this to the queue
-            if(ts.isEmpty()){
-                nodes.add(0, expanded.get(i));
-                continue;
-            }
-
-            //temporarily add the child to the queue
-            nodes.add(expanded.get(i));
-            for(int j = 0; j < ts.size(); j++){
-                //if the child is not the same as another child in the expanded list, then we don't remove
-                //if it is, we remove from the temporary array
+    public static void aStar(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue, Map<String, Double> map, boolean[] v){
+        for(int i = 0; i < expanded.size(); i++){ 
+            if (v[expanded.get(i).get(0).getIndex()] == false){ //if we haven't already visited the node we add it to the queue
+                Node s = expanded.get(i).get(0);
+                Node e = expanded.get(i).get(1);
                 
-                if (t.getNodeName().equals(ts.get(j).getNodeName())){
-                    nodes.remove(nodes.size() - 1);
-                    break;
-                }
-            }
-            
-            //sort the array 
-            if(nodes.size() > 1){
-                Collections.sort(nodes, new ArrayListComparator());
-            }
-        }
-        
-        if(!nodes.isEmpty()){
-            for(ArrayList<Node> nds : nodes){
-                Node s = nds.get(0);
-                Node e = nds.get(1);
-                List<Node> sublist = nds.subList(1, nds.size());
+                List<Node> sublist = expanded.get(i).subList(1, expanded.get(i).size());
                 double distance = 0;
                 for(int k = 0; k < s.getLinks().size(); k++){
                     if(s.getLinks().get(k).getEnd().getNodeName().equals(e.getNodeName())){
                         distance = s.getLinks().get(k).getDistance();
                     }
                 }
-                map.put(Arrays.toString(nds.toArray()), distance + map.get(Arrays.toString(sublist.toArray())));
+                map.put(Arrays.toString(expanded.get(i).toArray()), distance + map.get(Arrays.toString(sublist.toArray())));
+                queue.add(0, expanded.get(i));
+                Collections.sort(queue, new AStarComparator(map));
             }
-            for(int i = nodes.size() - 1; i >= 0; i--){
-                queue.add(nodes.get(i));
-            }
+        }
         
-            Collections.sort(queue, new AStarComparator(map));
+        //remove children if we don't need them
+        for(int i = 0; i < queue.size() - 1; i++){
+            for(int j = i + 1; j < queue.size(); j++){
+                if(queue.get(i).get(0).getNodeName().equals(queue.get(j).get(0).getNodeName())){
+                    queue.remove(j);
+                }
+            }
+            queue.get(i).get(0).getNodeName();
         }
     }
     
@@ -354,10 +324,8 @@ public class SearchMethods {
         //initialize stuff
         boolean[] v = new boolean[problem.size()];//to check if visited or not
         int index = 0; //for iterative deepening
-        Map<String, Double> uniformMap = new HashMap<>(); //for uniform
-        uniformMap.put(Arrays.toString(queue.get(0).toArray()), 0.0);
-        Map<String, Double> aStarMap = new HashMap<>(); //for a star
-        aStarMap.put(Arrays.toString(queue.get(0).toArray()), queue.get(0).get(0).getHeuristic());
+        Map<String, Double> map = new HashMap<>(); //for uniform/astar
+        map.put(Arrays.toString(queue.get(0).toArray()), 0.0);
         
         //start doing the methods
         while(!queue.isEmpty()){
@@ -399,11 +367,11 @@ public class SearchMethods {
                     break;
                 case "BFS" : bfs(expanded, queue);
                     break;
-                case "Uniform" : uniformSearch(expanded, queue, uniformMap);
+                case "Uniform" : uniformSearch(expanded, queue, map);
                     break;
                 case "Greedy": greedySearch(expanded, queue);
                     break;
-                case "AStar": aStar(expanded, queue, aStarMap);
+                case "AStar": aStar(expanded, queue, map, v);
                     break;
                 case "Beam":
                     break;

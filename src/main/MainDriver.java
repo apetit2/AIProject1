@@ -218,7 +218,7 @@ public class MainDriver {
             System.out.println("\n\n");
             
             //Beam Search
-            System.out.println("Beam Search");
+            System.out.println("Beam Search (w = 2)");
             SearchMethods.General_Search(nodes, "Beam");
             System.out.println("\n\n");
             
