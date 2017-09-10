@@ -8,7 +8,9 @@ package main;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  *
@@ -159,7 +161,7 @@ public class SearchMethods {
         }
     }
     
-    public static void uniformSearch(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue){
+    public static void uniformSearch(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue, Map<String, Double> map){
         //will need to use Collections.sort(queue, new DistanceComparator());
         ArrayList<ArrayList<Node>> nodes = new ArrayList<>();
         for(int i = 0; i < expanded.size(); i++){
@@ -202,19 +204,20 @@ public class SearchMethods {
             for(ArrayList<Node> nds : nodes){
                 Node s = nds.get(0);
                 Node e = nds.get(1);
+                List<Node> sublist = nds.subList(1, nds.size());
+                double distance = 0;
                 for(int k = 0; k < s.getLinks().size(); k++){
                     if(s.getLinks().get(k).getEnd().getNodeName().equals(e.getNodeName())){
-                        System.out.println(s.getLinks().get(k).getDistance());
-                        s.setDistance(s.getLinks().get(k).getDistance() + e.getDistance());
-                        System.out.println(nds);
-                        System.out.println(s.getDistance());
+                        distance = s.getLinks().get(k).getDistance();
                     }
                 }
+                map.put(Arrays.toString(nds.toArray()), distance + map.get(Arrays.toString(sublist.toArray())));
             }
             for(int i = nodes.size() - 1; i >= 0; i--){
                 queue.add(nodes.get(i));
             }
-            Collections.sort(queue, new NodeDistanceComparator());
+        
+            Collections.sort(queue, new NodeDistanceComparator(map));
         }
     }
     
@@ -301,6 +304,8 @@ public class SearchMethods {
         ArrayList<Node> tmp = new ArrayList<>();
         tmp.add(start);
         queue.add(tmp);
+        Map<String, Double> map = new HashMap<>();
+        map.put(Arrays.toString(queue.get(0).toArray()), 0.0);
         
         //start doing the methods
         while(!queue.isEmpty()){
@@ -342,7 +347,7 @@ public class SearchMethods {
                     break;
                 case "BFS" : bfs(expanded, queue);
                     break;
-                case "Uniform" : uniformSearch(expanded, queue);
+                case "Uniform" : uniformSearch(expanded, queue, map);
                     break;
                 case "Greedy": greedySearch(expanded, queue);
                     break;
