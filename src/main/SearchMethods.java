@@ -112,7 +112,7 @@ public class SearchMethods {
         return new ArrayList<>();
     }
     
-    public static void bfs(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue, boolean[] v){
+    public static void bfs(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue){
         //tmp array to keep track of all visited nodes so far
         ArrayList<ArrayList<Node>> tmp = new ArrayList<>();
         for(int i = expanded.size() - 1; i >= 0; i--){
@@ -159,8 +159,63 @@ public class SearchMethods {
         }
     }
     
-    public static void uniformSearch(){
+    public static void uniformSearch(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue){
+        //will need to use Collections.sort(queue, new DistanceComparator());
+        ArrayList<ArrayList<Node>> nodes = new ArrayList<>();
+        for(int i = 0; i < expanded.size(); i++){
+            //get the first node in the list we are looking at
+            Node t = expanded.get(i).get(0);
+            
+            //this is needed because it breaks sublist if we keep it going
+            if(expanded.get(i).size() == 2){
+                nodes.add(0, expanded.get(i));
+                continue;
+            }
+            
+            //make a sublist of all the visited nodes
+            List<Node> ts = expanded.get(i).subList(1, expanded.get(i).size());
+            //if there happens to be no visited nodes, well then we can add this to the queue
+            if(ts.isEmpty()){
+                nodes.add(0, expanded.get(i));
+                continue;
+            }
+
+            //temporarily add the child to the queue
+            nodes.add(expanded.get(i));
+            for(int j = 0; j < ts.size(); j++){
+                //if the child is not the same as another child in the expanded list, then we don't remove
+                //if it is, we remove from the temporary array
+                
+                if (t.getNodeName().equals(ts.get(j).getNodeName())){
+                    nodes.remove(nodes.size() - 1);
+                    break;
+                }
+            }
+            
+            //sort the array 
+            if(nodes.size() > 1){
+                Collections.sort(nodes, new ArrayListComparator());
+            }
+        }
         
+        if(!nodes.isEmpty()){
+            for(ArrayList<Node> nds : nodes){
+                Node s = nds.get(0);
+                Node e = nds.get(1);
+                for(int k = 0; k < s.getLinks().size(); k++){
+                    if(s.getLinks().get(k).getEnd().getNodeName().equals(e.getNodeName())){
+                        System.out.println(s.getLinks().get(k).getDistance());
+                        s.setDistance(s.getLinks().get(k).getDistance() + e.getDistance());
+                        System.out.println(nds);
+                        System.out.println(s.getDistance());
+                    }
+                }
+            }
+            for(int i = nodes.size() - 1; i >= 0; i--){
+                queue.add(nodes.get(i));
+            }
+            Collections.sort(queue, new NodeDistanceComparator());
+        }
     }
     
     public static void greedySearch(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue){
@@ -285,9 +340,9 @@ public class SearchMethods {
                         return "Goal Reached!";
                     }
                     break;
-                case "BFS" : bfs(expanded, queue, v);
+                case "BFS" : bfs(expanded, queue);
                     break;
-                case "Uniform" :
+                case "Uniform" : uniformSearch(expanded, queue);
                     break;
                 case "Greedy": greedySearch(expanded, queue);
                     break;

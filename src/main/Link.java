@@ -31,4 +31,8 @@ public class Link {
         public Node getEnd() {
             return this.end;
         }
+        
+        public String toString(){
+            return "Start: " + this.start + " End: " + this.end + " Distance: " + this.distance;
+        }
     }
