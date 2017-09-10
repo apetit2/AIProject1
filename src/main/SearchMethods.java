@@ -396,7 +396,24 @@ public class SearchMethods {
                 sb.append("]");
                 System.out.println(sb.toString());
             } else if (searchMethod.equals("AStar")){
-                
+                StringBuilder sb = new StringBuilder();
+                sb.append("[");
+                double total = map.get(Arrays.toString(currentList.toArray())) + currentList.get(0).getHeuristic();
+                String s2 = total + Arrays.toString(currentList.toArray());
+                sb.append(s2);
+                if(!queue.isEmpty()){
+                    sb.append(" , ");
+                }
+                for(int i = 0; i < queue.size(); i++){
+                    double total2 = map.get(Arrays.toString(queue.get(i).toArray())) + queue.get(i).get(0).getHeuristic();
+                    String s = total2 + Arrays.toString(queue.get(i).toArray());
+                    sb.append(s);
+                    if(i != queue.size() - 1){
+                        sb.append(" , ");
+                    }
+                }
+                sb.append("]");
+                System.out.println(sb.toString());
             } else {
                 System.out.println(current.getNodeName() + "\t\t" + tmpQueue);
             }
