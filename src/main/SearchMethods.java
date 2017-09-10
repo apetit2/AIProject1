@@ -353,76 +353,22 @@ public class SearchMethods {
         
         //start doing the methods
         while(!queue.isEmpty()){
-            ArrayList<ArrayList<Node>> tmpQueue = new ArrayList(queue); //temporary so we can print out
             ArrayList<Node> currentList = queue.get(0); //get the first arraylist of nodes
             queue.remove(0); //remove the first element of the queue
             Node current = currentList.get(0); //new current node
+            
             //print out the step we are one
-            if(searchMethod.equals("IDS")){
-                System.out.println("L = " + index);
-                System.out.println("Expanded \tQueue");
-            } else if((searchMethod.equals("Greedy")) || (searchMethod.equals("Beam")) || (searchMethod.equals("Hill"))){
-                StringBuilder sb = new StringBuilder();
-                sb.append("[");
-                String s2 = currentList.get(0).getHeuristic() + Arrays.toString(currentList.toArray());
-                sb.append(s2);
-                if(!queue.isEmpty()){
-                    sb.append(" , ");
-                }
-                for(int i = 0; i < queue.size(); i++){
-                    String s = queue.get(i).get(0).getHeuristic() + Arrays.toString(queue.get(0).toArray()); 
-                    sb.append(s);
-                    if (i != queue.size() - 1){
-                        sb.append(" , ");
-                    }
-                }
-                sb.append("]");
-                System.out.println(sb.toString());
-            } else if (searchMethod.equals("Uniform")){
-                StringBuilder sb = new StringBuilder();
-                sb.append("[");
-                String s2 = map.get(Arrays.toString(currentList.toArray())) + Arrays.toString(currentList.toArray());
-                sb.append(s2);
-                if(!queue.isEmpty()){
-                    sb.append(" , ");
-                }
-                for(int i = 0; i < queue.size(); i++){
-                    String s = map.get(Arrays.toString(queue.get(i).toArray())) + Arrays.toString(queue.get(i).toArray());
-                    sb.append(s);
-                    if(i != queue.size() - 1){
-                        sb.append(" , ");
-                    }
-                }
-                sb.append("]");
-                System.out.println(sb.toString());
-            } else if (searchMethod.equals("AStar")){
-                StringBuilder sb = new StringBuilder();
-                sb.append("[");
-                double total = map.get(Arrays.toString(currentList.toArray())) + currentList.get(0).getHeuristic();
-                String s2 = total + Arrays.toString(currentList.toArray());
-                sb.append(s2);
-                if(!queue.isEmpty()){
-                    sb.append(" , ");
-                }
-                for(int i = 0; i < queue.size(); i++){
-                    double total2 = map.get(Arrays.toString(queue.get(i).toArray())) + queue.get(i).get(0).getHeuristic();
-                    String s = total2 + Arrays.toString(queue.get(i).toArray());
-                    sb.append(s);
-                    if(i != queue.size() - 1){
-                        sb.append(" , ");
-                    }
-                }
-                sb.append("]");
-                System.out.println(sb.toString());
-            } else {
-                System.out.println(current.getNodeName() + "\t\t" + tmpQueue);
-            }
-            v[current.getIndex()] = true; //we have visited this node
+            toPrint(searchMethod, queue, currentList, index, map);
+            
+            //we are about to expand this node so mark it as visited
+            v[current.getIndex()] = true;
+            
             //if the current node is the goal node we break
             if(current.getNodeName().equals("G")){
                 System.out.println("Goal Reached!");
                 return "Goal Reached!";
             }
+            
             //expand the children of the current node we are testing
             ArrayList<ArrayList<Node>> expanded = expand(currentList);
             //run the search methods
@@ -477,4 +423,70 @@ public class SearchMethods {
         return tmp;
     } 
     
+    public static void toPrint(String searchMethod, ArrayList<ArrayList<Node>> queue, ArrayList<Node> currentList, int index, Map<String, Double> map){
+        if(searchMethod.equals("IDS")){
+            System.out.println("L = " + index);
+            System.out.println("Expanded \tQueue");
+            ArrayList<ArrayList<Node>> tmp = new ArrayList(queue);
+            tmp.add(0, currentList);
+            System.out.println(currentList.get(0).getNodeName() + "\t\t" + tmp);
+        } else if((searchMethod.equals("Greedy")) || (searchMethod.equals("Beam")) || (searchMethod.equals("Hill"))){
+            StringBuilder sb = new StringBuilder();
+            sb.append("[");
+            String s2 = currentList.get(0).getHeuristic() + Arrays.toString(currentList.toArray());
+            sb.append(s2);
+            if(!queue.isEmpty()){
+                sb.append(" , ");
+            }
+            for(int i = 0; i < queue.size(); i++){
+                String s = queue.get(i).get(0).getHeuristic() + Arrays.toString(queue.get(0).toArray()); 
+                sb.append(s);
+                if (i != queue.size() - 1){
+                    sb.append(" , ");
+                }
+            }
+            sb.append("]");
+            System.out.println(currentList.get(0).getNodeName() + "\t\t" + sb.toString());
+        } else if (searchMethod.equals("Uniform")){
+            StringBuilder sb = new StringBuilder();
+            sb.append("[");
+            String s2 = map.get(Arrays.toString(currentList.toArray())) + Arrays.toString(currentList.toArray());
+            sb.append(s2);
+            if(!queue.isEmpty()){
+                sb.append(" , ");
+            }
+            for(int i = 0; i < queue.size(); i++){
+                String s = map.get(Arrays.toString(queue.get(i).toArray())) + Arrays.toString(queue.get(i).toArray());
+                sb.append(s);
+                if(i != queue.size() - 1){
+                    sb.append(" , ");
+                }
+            }
+            sb.append("]");
+            System.out.println(currentList.get(0).getNodeName() + "\t\t" + sb.toString());
+        } else if (searchMethod.equals("AStar")){
+            StringBuilder sb = new StringBuilder();
+            sb.append("[");
+            double total = map.get(Arrays.toString(currentList.toArray())) + currentList.get(0).getHeuristic();
+            String s2 = total + Arrays.toString(currentList.toArray());
+            sb.append(s2);
+            if(!queue.isEmpty()){
+                sb.append(" , ");
+            }
+            for(int i = 0; i < queue.size(); i++){
+                double total2 = map.get(Arrays.toString(queue.get(i).toArray())) + queue.get(i).get(0).getHeuristic();
+                String s = total2 + Arrays.toString(queue.get(i).toArray());
+                sb.append(s);
+                if(i != queue.size() - 1){
+                    sb.append(" , ");
+                }
+            }
+            sb.append("]");
+            System.out.println(currentList.get(0).getNodeName() + "\t\t" + sb.toString());
+        } else {
+            ArrayList<ArrayList<Node>> tmp = new ArrayList(queue);
+            tmp.add(0, currentList);
+            System.out.println(currentList.get(0).getNodeName() + "\t\t" + tmp);
+        }
+    }
 }

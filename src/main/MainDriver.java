@@ -199,26 +199,31 @@ public class MainDriver {
             
             //Uniform Search
             System.out.println("Uniform Search");
+            System.out.println("Expanded \tQueue");
             SearchMethods.General_Search(nodes, "Uniform");
             System.out.println("\n\n");
             
             //Greedy Search
             System.out.println("Greedy Search");
+            System.out.println("Expanded \tQueue");
             SearchMethods.General_Search(nodes, "Greedy");
             System.out.println("\n\n");
             
             //A*
             System.out.println("A* Search");
+            System.out.println("Expanded \tQueue");
             SearchMethods.General_Search(nodes, "AStar");
             System.out.println("\n\n");
             
             //hill climb
             System.out.println("Hill Climb");
+            System.out.println("Expanded \tQueue");
             SearchMethods.General_Search(nodes, "Hill");
             System.out.println("\n\n");
             
             //Beam Search
             System.out.println("Beam Search (w = 2)");
+            System.out.println("Expanded \tQueue");
             SearchMethods.General_Search(nodes, "Beam");
             System.out.println("\n\n");
             
