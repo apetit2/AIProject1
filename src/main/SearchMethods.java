@@ -287,7 +287,20 @@ public class SearchMethods {
         }
     }
     
-    public static void beamSearch(){
+    public static void beamSearch(ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue, int w, boolean[] v){
+        if(queue.size() > w){
+            queue.remove(queue.size() - 1);
+        }
+        ArrayList<ArrayList<Node>> tmp = new ArrayList<>();
+        for(int i = 0; i < expanded.size(); i++){ 
+            if (v[expanded.get(i).get(0).getIndex()] == false){ //if we haven't already visited the node we add it to the queue
+                tmp.add(expanded.get(i));
+                Collections.sort(tmp, new HeuristicComparator());
+            }
+        }
+        for(int i = tmp.size() - 1; i >= 0; i--){
+            queue.add(0, tmp.get(i));
+        }
         
     }
     
@@ -326,6 +339,7 @@ public class SearchMethods {
         int index = 0; //for iterative deepening
         Map<String, Double> map = new HashMap<>(); //for uniform/astar
         map.put(Arrays.toString(queue.get(0).toArray()), 0.0);
+        int w = 2; //for beam search
         
         //start doing the methods
         while(!queue.isEmpty()){
@@ -373,7 +387,7 @@ public class SearchMethods {
                     break;
                 case "AStar": aStar(expanded, queue, map, v);
                     break;
-                case "Beam":
+                case "Beam": beamSearch(expanded, queue, w, v);
                     break;
                 case "Hill": hillClimb(expanded, queue, v);
                     break;
