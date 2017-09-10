@@ -361,8 +361,26 @@ public class SearchMethods {
             if(searchMethod.equals("IDS")){
                 System.out.println("L = " + index);
                 System.out.println("Expanded \tQueue");
+            } else if((searchMethod.equals("Greedy")) || (searchMethod.equals("Beam")) || (searchMethod.equals("Hill"))){
+                StringBuilder sb = new StringBuilder();
+                sb.append("[");
+                String s2 = currentList.get(0).getHeuristic() + Arrays.toString(currentList.toArray());
+                sb.append(s2);
+                if(!queue.isEmpty()){
+                    sb.append(" , ");
+                }
+                for(int i = 0; i < queue.size(); i++){
+                    String s = queue.get(i).get(0).getHeuristic() + Arrays.toString(queue.get(0).toArray()); 
+                    sb.append(s);
+                    if (i != queue.size() - 1){
+                        sb.append(" , ");
+                    }
+                }
+                sb.append("]");
+                System.out.println(sb.toString());
+            } else {
+                System.out.println(current.getNodeName() + "\t\t" + tmpQueue);
             }
-            System.out.println(current.getNodeName() + "\t\t" + tmpQueue);
             v[current.getIndex()] = true; //we have visited this node
             //if the current node is the goal node we break
             if(current.getNodeName().equals("G")){
