@@ -374,7 +374,37 @@ public class SearchMethods {
             ArrayList<ArrayList<Node>> expanded = expand(currentList);
             
             //run the search methods
-            runSearchAlgorithm(searchMethod, expanded, queue, v, index, start, limit, w, map, tmp);
+            switch(searchMethod){
+                case "DFS" : dfs(expanded, queue, v);
+                    break;
+                case "DFS-L" : dfsLimit(expanded, queue, v, limit);
+                    break;
+                case "IDS" : 
+                    queue = iterativeDeepening(expanded, queue, v, index, start);
+                    index++;                
+                    Arrays.fill(v, false);
+                    if(queue.isEmpty()){
+                        System.out.println("\n");
+                        queue.add(tmp);
+                    } else {
+                        System.out.println("Goal Reached!");
+                        return "Goal Reached!";
+                    }
+                    break;
+                case "BFS" : bfs(expanded, queue);
+                    break;
+                case "Uniform" : uniformSearch(expanded, queue, map);
+                    break;
+                case "Greedy": greedySearch(expanded, queue);
+                    break;
+                case "AStar": aStar(expanded, queue, map, v);
+                    break;
+                case "Beam": beamSearch(expanded, queue, w, v);
+                    break;
+                case "Hill": hillClimb(expanded, queue, v);
+                    break;
+                default: return "Failed - invalid method entry";
+            }
             
         }
         
@@ -461,37 +491,5 @@ public class SearchMethods {
             System.out.println(currentList.get(0).getNodeName() + "\t\t" + tmp);
         }
     }
-    
-    public static void runSearchAlgorithm(String searchMethod, ArrayList<ArrayList<Node>> expanded, ArrayList<ArrayList<Node>> queue, boolean[] v, int index, Node startNode, int limit, int w, Map<String, Double> map, ArrayList<Node> tmp){
-        switch(searchMethod){
-            case "DFS" : dfs(expanded, queue, v);
-                break;
-            case "DFS-L" : dfsLimit(expanded, queue, v, limit);
-                break;
-            case "IDS" : 
-                queue = iterativeDeepening(expanded, queue, v, index, startNode);
-                index++;                
-                Arrays.fill(v, false);
-                if(queue.isEmpty()){
-                    System.out.println("\n");
-                    queue.add(tmp);
-                } else {
-                    System.out.println("Goal Reached!");
-                }
-                break;
-            case "BFS" : bfs(expanded, queue);
-                break;
-            case "Uniform" : uniformSearch(expanded, queue, map);
-                break;
-            case "Greedy": greedySearch(expanded, queue);
-                break;
-            case "AStar": aStar(expanded, queue, map, v);
-                break;
-            case "Beam": beamSearch(expanded, queue, w, v);
-                break;
-            case "Hill": hillClimb(expanded, queue, v);
-                break;
-            default: System.out.println("Invalid Search Method Name Entered");
-        }
-    }
+
 }
