@@ -6,7 +6,9 @@
 package main;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Comparator;
+import java.util.Map;
 
 /**
  *
@@ -14,10 +16,15 @@ import java.util.Comparator;
  */
 public class NodeDistanceComparator implements Comparator<ArrayList<Node>> {
 
+    private static Map<String, Double> map; 
+    public NodeDistanceComparator(Map<String, Double> map){
+        NodeDistanceComparator.map = map;
+    }
+    
     @Override
     public int compare(ArrayList<Node> o1, ArrayList<Node> o2) {
-        if(o1.get(0).getDistance() < o2.get(0).getDistance()) return -1;
-        if(o1.get(0).getDistance() > o2.get(0).getDistance()) return 1;
+        if(map.get(Arrays.toString(o1.toArray())) < map.get(Arrays.toString(o2.toArray()))) return -1;
+        if(map.get(Arrays.toString(o1.toArray())) > map.get(Arrays.toString(o2.toArray()))) return 1;
         return o1.get(0).getNodeName().compareTo(o2.get(0).getNodeName());
     }
     
